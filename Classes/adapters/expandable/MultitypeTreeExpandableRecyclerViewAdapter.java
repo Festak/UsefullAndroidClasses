@@ -163,7 +163,7 @@ public abstract class MultitypeTreeExpandableRecyclerViewAdapter extends Recycle
         if (type == TreeNodeModel.ExpandType.EXPAND_TO_BOTTOM) {
             notifyItemRangeRemoved(position + 1, childrenCount);
         } else {
-            notifyItemRangeRemoved(position + childrenCount, childrenCount);
+            notifyItemRangeRemoved(position - 1, childrenCount);
         }
     }
 
