@@ -150,14 +150,14 @@ class WalletsAdapter(collapsedCategoriesIds: Set<String>, expandedNotDefaultAsse
 
     private fun onBindAsset(holder: ViewHolder<out ViewGroup>, assetWallet: AssetsWallet){
         val assetItem = holder.getItemView() as WalletInfoItem
-        assetItem.render(assetWallet)
+        assetItem.render(assetWallet, true)
         assetItem.tag = holder
         assetItem.imgPlus.tag = holder
     }
 
     private fun onBindBottomAsset(holder: ViewHolder<out ViewGroup>, assetWallet: AssetsWallet){
         val assetItem = holder.getItemView() as BottomWalletInfoItem
-        assetItem.render(assetWallet)
+        assetItem.render(assetWallet, true)
         assetItem.tag = holder
         assetItem.imgPlus?.tag = holder
     }
@@ -213,7 +213,8 @@ class WalletsAdapter(collapsedCategoriesIds: Set<String>, expandedNotDefaultAsse
     }
 
     private fun onChildClick(position: Int, view: View) {
-        if (getData(position).viewType === ViewType.ASSET) {
+        val type = getData(position).viewType;
+        if (type === ViewType.ASSET || type == ViewType.BOTTOM_ASSET) {
             val wallet = getData(position).data as AssetsWallet
             if (view.id == R.id.imgPlus) {
                 walletClickListener.onPlusClick(wallet)

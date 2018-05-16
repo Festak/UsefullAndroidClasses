@@ -8,6 +8,7 @@ enum class ViewType constructor(val code: Int) {
     UNDEFINED(0),
     CATEGORY(10),
     ASSET(20),
+    BOTTOM_ASSET(21),
     INFO(30);
 
     companion object {

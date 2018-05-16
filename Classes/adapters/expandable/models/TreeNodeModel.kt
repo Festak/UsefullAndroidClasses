@@ -7,8 +7,18 @@ import java.util.*
  * @author e.fetskovich on 4/24/18.
  */
 
-class TreeNodeModel constructor(val data: ListItemModel, val hierarchyType: Hierarchy = Hierarchy.CHILD,
-                                var isExpand: Boolean = false, val expandType: ExpandType = ExpandType.EXPAND_TO_BOTTOM) {
+// Child constructor
+class TreeNodeModel(val data: ListItemModel, val hierarchyType: Hierarchy = Hierarchy.CHILD) {
+
+    var isExpand: Boolean = false;
+    var expandType: ExpandType = ExpandType.EXPAND_TO_BOTTOM;
+
+    constructor(data: ListItemModel, isExpand: Boolean,
+                expandType: ExpandType = ExpandType.EXPAND_TO_BOTTOM) : this(data, Hierarchy.PARENT) {
+        // Parent constructor
+        this.isExpand = isExpand;
+        this.expandType = expandType;
+    }
 
     var parent: TreeNodeModel? = null
 
@@ -29,14 +39,32 @@ class TreeNodeModel constructor(val data: ListItemModel, val hierarchyType: Hier
     var count = 0;
     fun getChildCountWithExpandedTypes(): Int {
         count = 0;
+        return getTotalExpandedChildCountInList(childList);
+    }
+
+    fun getTotalChildCount() : Int{
+        count = 0;
         return getTotalChildCountInList(childList);
+    }
+
+    fun getTotalExpandedChildCountInList(list: MutableList<TreeNodeModel>?): Int {
+        if (list != null) {
+            list.forEach { model ->
+                count++;
+                if (model.isExpand) {
+                    getTotalExpandedChildCountInList(model.childList);
+                }
+            }
+        }
+        return count;
     }
 
     fun getTotalChildCountInList(list: MutableList<TreeNodeModel>?): Int {
         if (list != null) {
-            for (model in list) {
+            list.forEach { model ->
                 count++;
-                if (model.isExpand) {
+                if (model.childList != null) {
+                    count--
                     getTotalChildCountInList(model.childList);
                 }
             }
