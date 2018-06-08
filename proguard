@@ -1,0 +1,154 @@
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in C:\Users\e.kazimirova\AppData\Local\Android\sdk/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the proguardFiles
+# directive in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+##---------------Begin: proguard configuration common for all Android apps ----------
+## https://www.guardsquare.com/en/proguard/manual/usage - list of all proguard rules
+-optimizationpasses 5
+-useuniqueclassmembernames
+#-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+#-dontpreverify
+#-verbose
+#-dump class_files.txt
+#-printseeds seeds.txt
+#-printusage unused.txt
+#-printmapping mapping.txt
+#-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+-allowaccessmodification
+-renamesourcefileattribute SourceFile
+-useuniqueclassmembernames
+-mergeinterfacesaggressively
+-overloadaggressively
+
+## MODELS
+-keep class com.lykkex.LykkeWallet.rest.** { *; }
+#-keep class com.lykkex.LykkeWallet.gui.adapters.** { *; }
+-keep class com.lykkex.LykkeWallet.gui.models.** { *; }
+#-keep class com.lykkex.LykkeWallet.gui.customviews.** { *; }
+-keep class com.lykkex.LykkeWallet.wamp.models.** { *; }
+-keep class android.support.test.espresso.** { *; }
+-keepclassmembers enum * { *; }
+
+## EventBus
+-keepattributes *Annotation*
+-keepclassmembers class ** { @org.greenrobot.eventbus.Subscribe <methods>; }
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Android-support
+-dontwarn android.support.**
+-dontnote android.support.**
+-keep class android.support.v7.widget.RoundRectDrawable { *; }
+-keep public class android.support.v7.widget.** { *; }
+-keep public class android.support.v7.internal.widget.** { *; }
+-keep public class android.support.v7.internal.view.menu.** { *; }
+-keep public class * extends android.support.v4.view.ActionProvider {
+    public <init>(android.content.Context);
+}
+-keep public class android.support.design.widget.** { *; }
+-keep class com.android.tools.profiler.support.network.okhttp
+
+## Design
+#-keep class android.support.v4.app.** { *; }
+#-keep interface android.support.v4.app.** { *; }
+#-keep class android.support.v7.app.** { *; }
+#-keep interface android.support.v7.app.** { *; }
+
+## Retrofit
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+-keepattributes Signature
+-keepattributes Exceptions
+
+## Picasso
+-dontwarn com.squareup.okhttp.**
+
+## GSON
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class sun.misc.Unsafe { *; }
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+##Jackson
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+
+##Square
+-keepattributes Signature
+-keepattributes Annotation
+-keep class okhttp3.* { *; }
+-keep interface okhttp3.* { *; }
+-dontwarn okhttp3.
+-dontwarn okio.**
+
+##Spongy castle
+-keep class org.spongycastle.** { *; }
+-dontwarn org.spongycastle.**
+
+## Bitcoinj
+-keep,includedescriptorclasses class org.bitcoinj.wallet.Protos$** { *; }
+-keepclassmembers class org.bitcoinj.wallet.Protos { com.google.protobuf.Descriptors$FileDescriptor descriptor; }
+-keep,includedescriptorclasses class org.bitcoin.protocols.payments.Protos$** { *; }
+-keepclassmembers class org.bitcoin.protocols.payments.Protos { com.google.protobuf.Descriptors$FileDescriptor descriptor; }
+-keep class org.bitcoinj.crypto.** { *; }
+-dontwarn org.bitcoinj.crypto.**
+-dontwarn org.bitcoinj.store.WindowsMMapHack
+-dontwarn org.bitcoinj.store.LevelDBBlockStore
+-dontnote org.bitcoinj.crypto.DRMWorkaround
+-dontnote org.bitcoinj.crypto.TrustStoreLoader$DefaultTrustStoreLoader
+-dontnote com.subgraph.orchid.crypto.PRNGFixes
+-dontwarn okio.DeflaterSink
+-dontwarn okio.Okio
+-dontnote com.squareup.okhttp.internal.Platform
+-dontwarn org.bitcoinj.store.LevelDBFullPrunedBlockStore**
+
+# slf4j
+#Warning: com.mrd.bitlib.crypto.Bip38: can't find referenced method 'byte[] scrypt(byte[],byte[],int,int,int,int,com.lambdaworks.crypto.SCryptProgress)' in program class com.lambdaworks.crypto.SCrypt
+#Warning: com.mrd.bitlib.crypto.MrdExport$V1$EncryptionParameters: can't find referenced method 'byte[] scrypt(byte[],byte[],int,int,int,int,com.lambdaworks.crypto.SCryptProgress)' in program class com.lambdaworks.crypto.SCrypt
+-dontwarn org.slf4j.LoggerFactory
+-dontwarn org.slf4j.StaticMDCBinder
+-dontwarn org.slf4j.impl.StaticMarkerBinder
+-dontwarn org.slf4j.impl.StaticMDCBinder
+-keep class com.lambdaworks.** { *; }
+
+##Apache
+-keepattributes Signature,InnerClasses
+-keepclasseswithmembers class io.netty.** { *; }
+-keepnames class io.netty.** { *; }
+-keep class io.netty.handler.ssl.JdkAlpnSslEngine* { *; }
+-keep class io.netty.channel.sctp.SctpNotificationHandler { *; }
+-dontwarn io.netty.**
+
+# zxing
+-dontwarn com.google.zxing.common.BitMatrix
+
+# Crashlytics 2.+
+-keep class com.crashlytics.** { *; }
+-keep class com.crashlytics.android.**
+-keepattributes SourceFile, LineNumberTable, *Annotation*
+-keep public class * extends java.lang.Exception
+
+# reflection in our code
+-keep class com.lykkex.LykkeWallet.gui.widgets.CustomTextInputLayout
+-keep class org.ps.androidkeystore.android.security.** { *; }
+
+# rx
+-keep class rx.** { *; }
