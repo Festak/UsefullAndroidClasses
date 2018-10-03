@@ -1,0 +1,45 @@
+public abstract class BaseRecyclerViewAdapter <TModel, TView extends ViewGroup> extends RecyclerView.Adapter<ViewHolder<TView>> {
+
+    protected List<TModel> items;
+
+    public BaseRecyclerViewAdapter(List<TModel> items) {
+        this.items = items;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (items != null) {
+            return items.size();
+        }
+        return 0;
+    }
+
+    @NonNull
+    @Override
+    public final ViewHolder<TView> onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder<>(onCreateItemView(parent, viewType));
+    }
+
+    protected abstract TView onCreateItemView(ViewGroup parent, int viewType);
+
+    public TModel getItem(int pos) {
+        return items.get(pos);
+    }
+
+    public List<TModel> getItems() {
+        return items;
+    }
+
+    public void setItems(List<TModel> items) {
+        this.items = items;
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(TModel item) {
+        int index = items.indexOf(item);
+        if (index >= 0) {
+            items.remove(index);
+            notifyItemRemoved(index);
+        }
+    }
+}
