@@ -1,0 +1,68 @@
+    private RestApi restApi1;
+    @NonNull
+    private ApiUriConfigurator apiUriConfigurator = new ApiUriConfigurator.DefaultUriConfigurator();
+    @NonNull
+    private ApiUriConfig apiUriConfig
+            = apiUriConfigurator.createConfig(ApiUriConfigurator.Companion.getDEFAULT_SERVER_ID());
+
+    //for tests
+    private OkHttpClient okHttpClient;
+
+
+
+    private ApiUriConfig initApiUriConfig() {
+        int idServer = pref.idServer().get();
+        apiUriConfig = apiUriConfigurator.createConfig(idServer);
+        return apiUriConfig;
+    }
+
+
+   private OkHttpClient getHttpClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+
+        OkHttpClient client = builder
+                .proxySelector(ProxySelector.getDefault())
+                .readTimeout(50, TimeUnit.SECONDS)
+                .connectTimeout(50, TimeUnit.SECONDS)
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
+
+                        Request.Builder requestBuilder = original.newBuilder()
+                                .method(original.method(), original.body());
+
+                        requestBuilder.addHeader("User-Agent", Constants.USER_AGENT);
+                        String gcmDeviceToken = SecurityManager.getBearer();
+                        if (gcmDeviceToken != null && !gcmDeviceToken.isEmpty()) {
+                            requestBuilder.header("Authorization", Constants.PART_AUTHORIZATION
+                                    + gcmDeviceToken);
+                        }
+
+                        return chain.proceed(requestBuilder.build());
+                    }
+                })
+                .build();
+
+        if (BuildConfig.DEBUG) {
+            okHttpClient = client;
+        }
+
+        return client;
+    }
+
+    private void setUpRestApi1() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(getHttpClient())
+                .baseUrl(apiUriConfig.getRestApiV1())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        restApi1 = retrofit.create(RestApi.class);
+    }
+
