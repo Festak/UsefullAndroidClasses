@@ -114,3 +114,9 @@ public class JsonUtils {
         return gson;
     }
 }
+
+Example of list: 
+      List<HistorySummaryItem> list = JsonUtils.INSTANCE.loadCollectionFromJson(historiesJson,
+                    new TypeToken<LinkedList<HistorySummaryItem>>() {
+                    }.getType(),
+                    HistorySummaryItem.class);
